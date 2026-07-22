@@ -1,0 +1,14 @@
+import axios from "axios";
+
+const API = axios.create({
+    baseURL: "http://localhost:8080/api/auth",
+    headers: {
+        "Content-Type": "application/json"
+    }
+});
+
+export const register = (user) => API.post("/register", user);
+
+export const login = (user) => API.post("/login", user);
+
+export default API;
