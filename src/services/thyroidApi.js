@@ -63,6 +63,13 @@ chatWithAI: (id, message) =>
   api.post(`/ai-chat/${id}`, {
     message,
   }),
+  addFood: (food) => api.post("/diet", food),
+
+getTodayMeals: () => api.get("/diet/today"),
+
+getDietHistory: () => api.get("/diet/history"),
+
+deleteFood: (id) => api.delete(`/diet/${id}`),
   
   // POST /api/thyroid/report-analysis (multipart/form-data file upload)
   analyzeReport: async (file) => {
