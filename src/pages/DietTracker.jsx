@@ -1,12 +1,12 @@
-import {useState} from "react";
+
 import { RiRestaurant2Line,RiFireLine,RiCupLine,} 
 from "react-icons/ri";
 import MealCard from "../components/diet/MealCard";
 import WaterTracker from "../components/diet/WaterTracker";
 import CalorieTracker from "../components/diet/AddFoodModel";
-import AddFoodModal from "../components/diet/AddFoodModal";
+import AddFoodModal from "../components/diet/AddFoodModel";
 import { useEffect, useState } from "react";
-import { thyroidApi } from "../services/api";
+import { thyroidApi } from "../services/thyroidApi";
 
 export default function DietTracker(){
     const [meals, setMeals] = useState({

@@ -11,11 +11,11 @@ import {
   RiSearchLine,
   RiCheckboxCircleLine,
 } from 'react-icons/ri';
-import ChatMessages from "../components/ChatMessages";
-import ChatInput from "../components/ChatInput";
+import ChatMessages from "../components/chatbot/ChatMessages";
+import ChatInput from "../components/chatbot/ChatInput";
 import { thyroidApi } from '../services/thyroidApi';
-import AIAdviceCard, { AIAdviceSkeleton } from '../components/AIAdviceCard';
-import { PageLoader } from '../components/LoadingSpinner';
+import AIAdviceCard, { AIAdviceSkeleton } from '../components/report/AIAdviceCard';
+import { PageLoader } from '../components/common/LoadingSpinner';
 
 /* ─── Risk badge ─── */
 function RiskBadge({ level }) {

@@ -14,10 +14,10 @@ import {
   RiRobotLine,
   RiRefreshLine,
 } from 'react-icons/ri';
-import { thyroidApi } from '../services/thyroidApi';
-import HistoryTable from '../components/HistoryTable';
-import SearchBar from '../components/SearchBar';
-import { PageLoader } from '../components/LoadingSpinner';
+import { thyroidApi } from "../services/thyroidApi";
+import HistoryTable from '../components/history/HistoryTable';
+import SearchBar from '../components/history/SearchBar';
+import { PageLoader } from '../components/common/LoadingSpinner';
 
 /* ─── Risk badge helper (shared) ─── */
 function RiskBadge({ level }) {

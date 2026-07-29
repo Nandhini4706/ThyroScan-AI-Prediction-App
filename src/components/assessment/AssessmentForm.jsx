@@ -3,7 +3,7 @@ import {
   RiUserLine, RiHeartPulseLine, RiLoader4Line,
   RiFlashlightLine, RiArrowRightLine
 } from 'react-icons/ri';
-import { thyroidApi } from '../services/thyroidApi';
+import { thyroidApi } from '../../services/thyroidApi';
 
 const initialForm = {
   name: '',

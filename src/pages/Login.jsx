@@ -34,12 +34,13 @@ const Login = () => {
       console.log(response);
 
       // Save JWT
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token
+      );
       localStorage.setItem("name", response.data.name);
 
       alert("Login Successful!");
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       alert(error.response?.data?.message || "Login Failed");
     } finally {

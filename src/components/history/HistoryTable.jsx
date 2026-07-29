@@ -5,7 +5,7 @@ import {
   RiAlertLine, RiCheckboxCircleLine, RiUserLine,
   RiLoader4Line
 } from 'react-icons/ri';
-import { thyroidApi } from '../services/thyroidApi';
+import { thyroidApi } from '../../services/thyroidApi';
 
 function RiskBadge({ level }) {
   const l = level?.toLowerCase();

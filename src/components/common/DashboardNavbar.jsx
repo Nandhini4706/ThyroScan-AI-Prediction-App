@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { RiPulseLine, RiDashboardLine, RiHistoryLine, RiRobotLine, RiMenuLine, RiCloseLine, RiFileChartLine } from 'react-icons/ri';
+import { RiPulseLine, RiDashboardLine, RiHistoryLine, RiRobotLine, RiMenuLine, RiCloseLine, RiFileChartLine, RiHeartPulseLine } from 'react-icons/ri';
 import LogoutButton from "./LogoutButton";
 
 const navLinks = [
-  { to: '/', label: 'Dashboard', icon: RiDashboardLine },
-  { to: '/history', label: 'History', icon: RiHistoryLine },
-  { to: '/ai-assistant', label: 'AI Assistant', icon: RiRobotLine },
-  { to: '/report-analyzer', label: 'Report Analyzer', icon: RiFileChartLine },
+  { to: "/dashboard", label: "Dashboard", icon: RiDashboardLine },
+  { to: "/assessment", label: "Assessment", icon: RiPulseLine },
+  { to: "/history", label: "History", icon: RiHistoryLine },
+  { to: "/ai-assistant", label: "AI Assistant", icon: RiRobotLine },
+  { to: "/report-analyzer", label: "Report Analyzer", icon: RiFileChartLine },
+  { to: "/diet-tracker", label: "Diet Tracker", icon: RiHeartPulseLine },
 ];
 
 export default function Navbar() {

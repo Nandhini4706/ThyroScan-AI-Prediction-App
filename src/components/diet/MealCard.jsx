@@ -1,45 +1,106 @@
-import { RiAddLine } from "react-icons/ri";
-import FoodItem from "./FoodItem";
+import {
+  RiAddCircleFill,
+  RiCheckboxCircleFill,
+} from "react-icons/ri";
 
 export default function MealCard({
   title,
   mealKey,
-  foods = [],
+  foods,
   onAddFood,
 }) {
+
+  const calories = foods.reduce(
+    (sum, food) => sum + food.calories,
+    0
+  );
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+    <div className="bg-white rounded-3xl shadow-md p-6 hover:shadow-xl transition-all duration-300">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="text-xl font-semibold text-slate-800">
-          {title}
-        </h2>
+
+      <div className="flex justify-between items-center">
+
+        <div>
+
+          <h2 className="text-2xl font-bold text-slate-800">
+            {title}
+          </h2>
+
+          <p className="text-gray-400 text-sm">
+            Today's Meal
+          </p>
+
+        </div>
 
         <button
-          onClick={() => onAddFood?.(mealKey)}
-          className="flex items-center gap-1 bg-teal-600 hover:bg-teal-700 text-white px-3 py-2 rounded-lg transition"
+          onClick={() => onAddFood(mealKey)}
+          className="text-teal-600 hover:scale-110 transition"
         >
-          <RiAddLine className="text-lg" />
-          Add Food
+          <RiAddCircleFill size={34} />
         </button>
+
       </div>
 
       {/* Food List */}
-      {foods.length > 0 ? (
-        <div className="space-y-3">
-          {foods.map((food, index) => (
-            <FoodItem
+
+      <div className="mt-5 space-y-3">
+
+        {foods.length === 0 ? (
+
+          <p className="text-gray-400">
+            No foods added yet.
+          </p>
+
+        ) : (
+
+          foods.map((food, index) => (
+
+            <div
               key={index}
-              food={food}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-10 text-slate-400 border-2 border-dashed rounded-xl">
-          No food added yet.
-        </div>
-      )}
+              className="flex justify-between items-center bg-slate-50 rounded-xl px-4 py-3"
+            >
+
+              <div className="flex items-center gap-3">
+
+                <RiCheckboxCircleFill className="text-green-500" />
+
+                <div>
+
+                  <p className="font-medium">
+                    {food.name}
+                  </p>
+
+                  <p className="text-sm text-gray-400">
+                    {food.calories} kcal
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          ))
+
+        )}
+
+      </div>
+
+      {/* Footer */}
+
+      <div className="mt-6 flex justify-between">
+
+        <span className="text-gray-500">
+          Total Calories
+        </span>
+
+        <span className="font-bold text-orange-500">
+          {calories} kcal
+        </span>
+
+      </div>
 
     </div>
   );
