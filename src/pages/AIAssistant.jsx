@@ -196,7 +196,7 @@ const [chatLoading, setChatLoading] = useState(false);
         setSelectedRecord(rec);
       }
 
-      const result = await thyroidApi.getAiAdvice(recordId);
+      const result = await thyroidApi.getAIAdvice(recordId);
       console.log("Gemini Response:", result);
       setAdvice(result);
 

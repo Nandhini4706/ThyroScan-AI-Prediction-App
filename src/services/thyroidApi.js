@@ -56,7 +56,7 @@ getById: (id) => api.get(`/history/${id}`),
 deleteById: (id) => api.delete(`/history/${id}`),
 
 // GET /api/thyroid/report-ai/:id
-getAiAdvice: (id) => api.get(`/ai-chat/${id}`),
+getAIAdvice: (id) => api.get(`/ai-chat/${id}`),
 
 // POST /api/thyroid/ai-chat/:id
 chatWithAI: (id, message) =>
