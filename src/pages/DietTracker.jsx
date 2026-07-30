@@ -7,6 +7,7 @@ import CalorieTracker from "../components/diet/AddFoodModel";
 import AddFoodModal from "../components/diet/AddFoodModel";
 import { useEffect, useState } from "react";
 import { thyroidApi } from "../services/thyroidApi";
+import SummaryCard from "../components/dashboard/SummaryCard";
 
 export default function DietTracker(){
     const [meals, setMeals] = useState({
@@ -94,10 +95,13 @@ const totalCalories = Object.values(meals)
 
         <WaterTracker />
 
-        <CalorieCard 
-        consumed={
-        totalCalories
-        }goal={1800}/>
+        <SummaryCard
+          icon={<RiFireLine />}
+          title="Calories Consumed"
+          value={totalCalories}
+          subtitle="Daily Goal: 1800"
+          color="#fef3c7"
+        />
 
       </div>
 <AddFoodModal
