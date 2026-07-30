@@ -12,10 +12,10 @@
   RiShieldCheckLine,
   RiRefreshLine,
  } from 'react-icons/ri';
-import PatientCard from "../components/Report/PatientCard";
-import ParameterCard from "../components/Report/ParameterCard";
-import DiagnosisCard from "../components/Report/DiagnosisCard";
-import DecisionTrace from "../components/Report/DecisionTrace";
+import PatientCard from "../components/report/PatientCard";
+import ParameterCard from "../components/report/ParameterCard";
+import DiagnosisCard from "../components/report/DiagnosisCard";
+import DecisionTrace from "../components/report/DecisionTrace";
 import FoodCard from "../components/nutrition/FoodCard";
 import MealPlan from "../components/nutrition/MealPlan";
 import LifestyleCard from "../components/nutrition/LifestyleCard";
