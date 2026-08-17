@@ -1,25 +1,84 @@
 
-import { RiRestaurant2Line,RiFireLine,RiCupLine,} 
-from "react-icons/ri";
-import MealCard from "../components/diet/MealCard";
-import WaterTracker from "../components/diet/WaterTracker";
-import CalorieTracker from "../components/diet/AddFoodModel";
-import AddFoodModal from "../components/diet/AddFoodModel";
 import { useEffect, useState } from "react";
 import { thyroidApi } from "../services/thyroidApi";
+import {
+  RiRestaurant2Line,
+  RiFireLine, 
+} from "react-icons/ri";
+import MealCard from "../components/nutrition/MealCard";
+import WaterTracker from "../components/diet/WaterTracker";
+import AddFoodModal from "../components/diet/AddFoodModel";
 import SummaryCard from "../components/dashboard/SummaryCard";
+import RecommendedDietCard from "../components/diet/RecommendedDietCard";
+import DietProgress from "../components/diet/DietProgress";
+import AIHealthScore from "../components/diet/AIHealthScore";
+
 
 export default function DietTracker(){
-    const [meals, setMeals] = useState({
-  breakfast: [],
-  lunch: [],
-  snacks: [],
-  dinner: [],
-});
+  const [meals, setMeals] = useState({
+    breakfast: [],
+    lunch: [],
+    snacks: [],
+    dinner: [],
+  });
 
-const [selectedMeal, setSelectedMeal] = useState("");
-const [modalOpen, setModalOpen] = useState(false);
-const openModal = (mealKey) => {
+  
+  const [selectedMeal, setSelectedMeal] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [dietPlan, setDietPlan] = useState(null);
+const [dailySummary, setDailySummary] = useState(null);
+  const loadMeals = async () => {
+    try {
+      const data = await thyroidApi.getTodayMeals();
+      
+      const grouped = {
+        breakfast: [],
+        lunch: [],
+        snacks: [],
+        dinner: [],
+      };
+      
+      data.forEach((food) => {
+        grouped[food.mealType].push(food);
+      });
+      
+      setMeals(grouped);
+      
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
+  useEffect(() => {
+  const loadData = async () => {
+
+    try {
+
+      await loadMeals();
+
+      const plan =
+        await thyroidApi.getTodayDietPlan();
+
+      setDietPlan(plan);
+
+      const summary =
+        await thyroidApi.getDailySummary();
+
+      setDailySummary(summary);
+
+    } catch (err) {
+
+      console.error(err);
+
+    }
+
+  };
+
+  loadData();
+
+  
+  }, []);
+  const openModal = (mealKey) => {
   setSelectedMeal(mealKey);
   setModalOpen(true);
 };
@@ -28,12 +87,74 @@ const closeModal = () => {
   setModalOpen(false);
 };
 
-const handleSaveFood = (food) => {
-  setMeals((prev) => ({
-    ...prev,
-    [food.mealType]: [...prev[food.mealType], food],
-  }));
+const handleSaveFood = async (food) => {
+
+  try {
+
+    await thyroidApi.addFood({
+      ...food,
+      date: new Date().toISOString().split("T")[0],
+    });
+
+    await loadMeals();
+
+    const summary =
+      await thyroidApi.getDailySummary();
+
+    setDailySummary(summary);
+
+    closeModal();
+
+  } catch (err) {
+
+    console.error(err);
+
+  }
 };
+
+const handleDeleteFood = async (id) => {
+
+  try {
+
+    await thyroidApi.deleteFood(id);
+
+    await loadMeals();
+
+    const summary =
+      await thyroidApi.getDailySummary();
+
+    setDailySummary(summary);
+
+  } catch (err) {
+
+    console.error(err);
+
+  }
+};
+
+const handleToggleFood = (foodName) => {
+  setCompletedFoods((prev) => {
+    if (prev.includes(foodName)) {
+      return prev.filter((item) => item !== foodName);
+    }
+
+    return [...prev, foodName];
+  });
+};
+
+
+const [completedFoods, setCompletedFoods] = useState([]);
+
+const totalFoods = dietPlan
+  ? Object.values(dietPlan).filter(
+      value => typeof value === "string"
+    ).length
+  : 0;
+
+
+
+const completedCount = completedFoods.length;
+
 const totalCalories = Object.values(meals)
   .flat()
   .reduce((sum, item) => sum + item.calories, 0);
@@ -60,33 +181,66 @@ const totalCalories = Object.values(meals)
         </p>
 
       </div>
+      <AIHealthScore />
+
+      {dietPlan && (
+  <div className="bg-white rounded-2xl border shadow-sm p-6 mt-6">
+
+    <RecommendedDietCard
+      dietPlan={dietPlan}
+    />
+
+  </div>
+)}
+
+<DietProgress
+    completed={completedCount}
+    total={totalFoods}
+/>
+
+<RecommendedDietCard
+    dietPlan={dietPlan}
+    completedFoods={completedFoods}
+    onToggleFood={handleToggleFood}
+/>
+
+
 
       {/* Meal Cards */}
       <div className="grid lg:grid-cols-2 gap-6">
 
-        <MealCard
-          title="Breakfast"
-          mealKey="breakfast"
-          foods={meals.breakfast}
-        />
 
         <MealCard
-          title="Lunch"
-          mealKey="lunch"
-          foods={meals.lunch}
-        />
+  title="Breakfast"
+  mealKey="breakfast"
+  foods={meals.breakfast}
+  onAddFood={openModal}
+  onDeleteFood={handleDeleteFood}
+/>
 
-        <MealCard
-          title="Snacks"
-          mealKey="snacks"
-          foods={meals.snacks}
-        />
+       <MealCard
+  title="Lunch"
+  mealKey="lunch"
+  foods={meals.lunch}
+  onAddFood={openModal}
+  onDeleteFood={handleDeleteFood}
+/>
 
-        <MealCard
-          title="Dinner"
-          mealKey="dinner"
-          foods={meals.dinner}
-        />
+<MealCard
+  title="Snacks"
+  mealKey="snacks"
+  foods={meals.snacks}
+  onAddFood={openModal}
+  onDeleteFood={handleDeleteFood}
+/>
+
+<MealCard
+  title="Dinner"
+  mealKey="dinner"
+  foods={meals.dinner}
+  onAddFood={openModal}
+  onDeleteFood={handleDeleteFood}
+/>
 
       </div>
 
@@ -109,6 +263,7 @@ const totalCalories = Object.values(meals)
   mealType={selectedMeal}
   onClose={closeModal}
   onSave={handleSaveFood}
+
 />
     </div>
   );

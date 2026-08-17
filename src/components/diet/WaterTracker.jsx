@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   RiCupLine,
   RiAddLine,
@@ -7,7 +7,14 @@ import {
 
 export default function WaterTracker() {
   const goal = 3; // Litres
-  const [water, setWater] = useState(1.5);
+
+const [water, setWater] = useState(() => {
+  return Number(localStorage.getItem("water")) || 1.5;
+});
+
+useEffect(() => {
+  localStorage.setItem("water", water);
+}, [water]);
 
   const increaseWater = () => {
     if (water < goal) {

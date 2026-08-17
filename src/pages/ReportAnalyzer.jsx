@@ -12,6 +12,7 @@
   RiShieldCheckLine,
   RiRefreshLine,
  } from 'react-icons/ri';
+ import { useHealthProfile } from "../context/HealthProfileContext";
 import PatientCard from "../components/report/PatientCard";
 import ParameterCard from "../components/report/ParameterCard";
 import DiagnosisCard from "../components/report/DiagnosisCard";
@@ -136,6 +137,9 @@ export default function ReportAnalyzer() {
     fileInputRef.current?.click();
   };
 
+  const { setProfile } = useHealthProfile();
+ 
+
   /* ── Submit to backend ── */
   const handleAnalyze = async () => {
     if (!file) {
@@ -150,6 +154,18 @@ export default function ReportAnalyzer() {
     try {
       const result = await thyroidApi.analyzeReport(file);
       setAiResponse(result);
+
+setProfile({
+  patient: result.patientReport,
+  diagnosis: result.diagnosis,
+  riskLevel: result.riskLevel,
+  foodsToEat: result.foodsToEat,
+  foodsToAvoid: result.foodsToAvoid,
+  mealPlan: result.mealPlan,
+  exercise: result.exercise,
+  water: result.water,
+  sleep: result.sleep,
+});
       setSuccess(true);
     } catch (err) {
       setError(err.message || 'Failed to analyze report. Please check your backend connection and try again.');

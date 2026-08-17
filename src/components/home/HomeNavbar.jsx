@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { RiMenuLine, RiCloseLine, RiPulseLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
 
 export default function HomeNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -56,13 +56,14 @@ export default function HomeNavbar() {
           <div className="hidden md:flex items-center gap-8">
 
             {links.map((item) => (
-             <a
-  href={item.href}
-  className="font-medium text-slate-700 hover:text-teal-600 transition"
->
-  {item.name}
-</a>
-            ))}
+  <a
+    key={item.href}
+    href={item.href}
+    className="font-medium text-slate-700 hover:text-teal-600 transition"
+  >
+    {item.name}
+  </a>
+))}
 
           </div>
 
