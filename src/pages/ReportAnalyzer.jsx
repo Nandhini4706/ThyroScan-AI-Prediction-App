@@ -346,6 +346,7 @@ setProfile({
     <DiagnosisCard
         diagnosis={aiResponse.diagnosis}
         riskLevel={aiResponse.riskLevel}
+      healthSummary={aiResponse.healthSummary}
     />
 
     <DecisionTrace

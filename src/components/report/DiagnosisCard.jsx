@@ -1,4 +1,6 @@
-const DiagnosisCard = ({ diagnosis, riskLevel }) => {
+import FormattedText from "../common/FormattedText";
+
+const DiagnosisCard = ({ diagnosis, riskLevel, healthSummary }) => {
 
     if (!diagnosis) return null;
 
@@ -17,8 +19,14 @@ const DiagnosisCard = ({ diagnosis, riskLevel }) => {
             </h2>
 
             <h3 className="text-2xl font-bold mb-4">
-                {diagnosis}
+                <FormattedText value={diagnosis} />
             </h3>
+
+            {healthSummary && (
+                <p className="mb-4 whitespace-pre-line text-slate-600">
+                    <FormattedText value={healthSummary} />
+                </p>
+            )}
 
             <span
                 className={`px-4 py-2 rounded-full font-semibold ${riskColor}`}

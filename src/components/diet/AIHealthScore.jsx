@@ -1,12 +1,19 @@
 import {
   RiRobot2Line,
-  RiCheckboxCircleFill,
   RiErrorWarningLine,
 } from "react-icons/ri";
 
 export default function AIHealthScore({
-  score = 92,
+  summary,
 }) {
+  const score = summary?.healthScore;
+  const improvements = Array.isArray(summary?.improvements)
+    ? summary.improvements
+    : summary?.improvements
+      ? [summary.improvements]
+      : [];
+
+  if (!summary) return null;
   return (
     <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-2xl shadow-lg p-6 text-white mb-6">
 
@@ -25,7 +32,7 @@ export default function AIHealthScore({
           </div>
 
           <p className="text-teal-100 mt-2">
-            Based on today's meals and thyroid condition
+            Your daily nutrition feedback
           </p>
 
         </div>
@@ -45,61 +52,25 @@ export default function AIHealthScore({
       <div className="grid md:grid-cols-2 gap-4 mt-6">
 
         <div className="bg-white/10 rounded-xl p-4">
-
-          <div className="flex items-center gap-2">
-
-            <RiCheckboxCircleFill />
-
-            <span>Good Protein Intake</span>
-
-          </div>
-
-          <div className="flex items-center gap-2 mt-2">
-
-            <RiCheckboxCircleFill />
-
-            <span>Healthy Breakfast</span>
-
-          </div>
-
-          <div className="flex items-center gap-2 mt-2">
-
-            <RiCheckboxCircleFill />
-
-            <span>Water Goal Achieved</span>
-
-          </div>
-
+          <h3 className="font-semibold">Today's Analysis</h3>
+          <p className="mt-2 text-teal-50">{summary.summary || "No analysis available."}</p>
         </div>
 
         <div className="bg-white/10 rounded-xl p-4">
-
-          <div className="flex items-center gap-2">
-
-            <RiErrorWarningLine />
-
-            <span>Increase Iron Intake</span>
-
-          </div>
-
-          <div className="flex items-center gap-2 mt-2">
-
-            <RiErrorWarningLine />
-
-            <span>More Green Vegetables</span>
-
-          </div>
-
-          <div className="flex items-center gap-2 mt-2">
-
-            <RiErrorWarningLine />
-
-            <span>Reduce Sugar</span>
-
-          </div>
-
+          <h3 className="font-semibold">Improvements</h3>
+          {improvements.length > 0 ? improvements.map((item, index) => (
+            <div className="flex items-start gap-2 mt-2" key={index}>
+              <RiErrorWarningLine className="mt-0.5 shrink-0" />
+              <span>{item}</span>
+            </div>
+          )) : <p className="mt-2 text-teal-50">No improvements available.</p>}
         </div>
 
+      </div>
+
+      <div className="mt-4 rounded-xl bg-white/10 p-4">
+        <h3 className="font-semibold">Tomorrow's Recommendation</h3>
+        <p className="mt-2 text-teal-50">{summary.tomorrowRecommendation || "No recommendation available."}</p>
       </div>
 
     </div>

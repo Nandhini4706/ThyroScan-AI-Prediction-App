@@ -1,3 +1,5 @@
+import FormattedText from "../common/FormattedText";
+
 const LifestyleCard = ({ exercise, water, sleep }) => {
 
     return (
@@ -12,17 +14,17 @@ const LifestyleCard = ({ exercise, water, sleep }) => {
 
                 <div className="border rounded-lg p-4">
                     <h3 className="font-bold">🏃 Exercise</h3>
-                    <p>{exercise}</p>
+                    <p className="whitespace-pre-line"><FormattedText value={exercise} /></p>
                 </div>
 
                 <div className="border rounded-lg p-4">
                     <h3 className="font-bold">💧 Water Intake</h3>
-                    <p>{water}</p>
+                    <p className="whitespace-pre-line"><FormattedText value={water} /></p>
                 </div>
 
                 <div className="border rounded-lg p-4">
                     <h3 className="font-bold">😴 Sleep</h3>
-                    <p>{sleep}</p>
+                    <p className="whitespace-pre-line"><FormattedText value={sleep} /></p>
                 </div>
 
             </div>

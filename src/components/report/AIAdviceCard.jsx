@@ -8,6 +8,7 @@ import {
   RiSparklingLine,
   RiUserLine,
 } from 'react-icons/ri';
+import { normalizeAiText } from '../common/FormattedText';
 
 /* ─── Section icon + colour map ─── */
 const SECTION_CONFIG = {
@@ -57,7 +58,7 @@ function parseAdvice(raw) {
       ? raw
       : raw.advice || "";
 
-  const normalized = text.replace(/\r\n/g, "\n").trim();
+  const normalized = normalizeAiText(text).trim();
 
   // Try to identify known section headings from the AI response
   const sectionPatterns = [
@@ -148,7 +149,7 @@ function AdviceSection({ section }) {
               section.key === 'diet'  ? 'bg-emerald-400' :
               'bg-teal-400'
             }`} />
-            <p className="text-sm text-slate-700 leading-relaxed">{line}</p>
+            <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line">{normalizeAiText(line)}</p>
           </div>
         ))}
       </div>

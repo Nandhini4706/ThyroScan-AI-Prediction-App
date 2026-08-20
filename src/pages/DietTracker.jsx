@@ -26,10 +26,12 @@ export default function DietTracker(){
   const [selectedMeal, setSelectedMeal] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [dietPlan, setDietPlan] = useState(null);
-const [dailySummary, setDailySummary] = useState(null);
+  const [dailySummary, setDailySummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [completedMeals, setCompletedMeals] = useState([]);
   const loadMeals = async () => {
-    try {
-      const data = await thyroidApi.getTodayMeals();
+    const data = await thyroidApi.getTodayMeals();
       
       const grouped = {
         breakfast: [],
@@ -38,38 +40,32 @@ const [dailySummary, setDailySummary] = useState(null);
         dinner: [],
       };
       
-      data.forEach((food) => {
-        grouped[food.mealType].push(food);
+      (Array.isArray(data) ? data : []).forEach((food) => {
+        const mealType = food.mealType === "snack" ? "snacks" : food.mealType;
+        if (grouped[mealType]) grouped[mealType].push(food);
       });
       
       setMeals(grouped);
       
-    } catch (err) {
-      console.error(err);
-    }
   };
   
   useEffect(() => {
   const loadData = async () => {
 
     try {
-
+      setLoading(true);
+      setError("");
       await loadMeals();
-
-      const plan =
-        await thyroidApi.getTodayDietPlan();
-
-      setDietPlan(plan);
-
-      const summary =
-        await thyroidApi.getDailySummary();
-
-      setDailySummary(summary);
-
+      const [plan, summary] = await Promise.all([
+        thyroidApi.getTodayDietPlan(),
+        thyroidApi.getDailySummary(),
+      ]);
+      setDietPlan(plan || null);
+      setDailySummary(summary || null);
     } catch (err) {
-
-      console.error(err);
-
+      setError(err.message || "Unable to load today's nutrition data.");
+    } finally {
+      setLoading(false);
     }
 
   };
@@ -96,18 +92,12 @@ const handleSaveFood = async (food) => {
       date: new Date().toISOString().split("T")[0],
     });
 
-    await loadMeals();
-
-    const summary =
-      await thyroidApi.getDailySummary();
-
-    setDailySummary(summary);
-
+    await refreshTrackingData();
     closeModal();
 
   } catch (err) {
 
-    console.error(err);
+    setError(err.message || "Unable to add this food.");
 
   }
 };
@@ -118,46 +108,48 @@ const handleDeleteFood = async (id) => {
 
     await thyroidApi.deleteFood(id);
 
-    await loadMeals();
-
-    const summary =
-      await thyroidApi.getDailySummary();
-
-    setDailySummary(summary);
+    await refreshTrackingData();
 
   } catch (err) {
 
-    console.error(err);
+    setError(err.message || "Unable to delete this food.");
 
   }
 };
 
-const handleToggleFood = (foodName) => {
-  setCompletedFoods((prev) => {
-    if (prev.includes(foodName)) {
-      return prev.filter((item) => item !== foodName);
+const refreshTrackingData = async () => {
+  const [mealData, summary] = await Promise.all([
+    thyroidApi.getTodayMeals(),
+    thyroidApi.getDailySummary(),
+  ]);
+  const grouped = { breakfast: [], lunch: [], snacks: [], dinner: [] };
+  (Array.isArray(mealData) ? mealData : []).forEach((food) => {
+    const mealType = food.mealType === "snack" ? "snacks" : food.mealType;
+    if (grouped[mealType]) grouped[mealType].push(food);
+  });
+  setMeals(grouped);
+  setDailySummary(summary || null);
+};
+
+const handleToggleMeal = (meal) => {
+  setCompletedMeals((prev) => {
+    if (prev.includes(meal)) {
+      return prev.filter((item) => item !== meal);
     }
 
-    return [...prev, foodName];
+    return [...prev, meal];
   });
 };
 
-
-const [completedFoods, setCompletedFoods] = useState([]);
-
-const totalFoods = dietPlan
-  ? Object.values(dietPlan).filter(
-      value => typeof value === "string"
-    ).length
+const recommendedMeals = ["breakfast", "snack", "lunch", "evening", "dinner"];
+const totalMeals = dietPlan
+  ? recommendedMeals.filter((meal) => dietPlan[meal]).length
   : 0;
-
-
-
-const completedCount = completedFoods.length;
+const completedCount = completedMeals.filter((meal) => dietPlan?.[meal]).length;
 
 const totalCalories = Object.values(meals)
   .flat()
-  .reduce((sum, item) => sum + item.calories, 0);
+  .reduce((sum, item) => sum + Number(item.calories || 0), 0);
 
     return(
          <div className="max-w-7xl mx-auto px-6 py-8">
@@ -181,27 +173,24 @@ const totalCalories = Object.values(meals)
         </p>
 
       </div>
-      <AIHealthScore />
-
-      {dietPlan && (
-  <div className="bg-white rounded-2xl border shadow-sm p-6 mt-6">
-
-    <RecommendedDietCard
-      dietPlan={dietPlan}
-    />
-
-  </div>
-)}
+      {loading && <div className="rounded-2xl bg-white p-6 text-slate-500 shadow-sm">Loading today's nutrition plan...</div>}
+      {!loading && error && <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-700">{error}</div>}
+      {!loading && !error && !dietPlan && (
+        <div className="rounded-2xl border border-dashed border-teal-300 bg-teal-50 p-8 text-center text-slate-700">
+          <h2 className="text-xl font-semibold">No personalized diet plan yet</h2>
+          <p className="mt-2">Complete a Report Analysis first to receive today's plan.</p>
+        </div>
+      )}
 
 <DietProgress
     completed={completedCount}
-    total={totalFoods}
+    total={totalMeals}
 />
 
 <RecommendedDietCard
     dietPlan={dietPlan}
-    completedFoods={completedFoods}
-    onToggleFood={handleToggleFood}
+    completedFoods={completedMeals}
+    onToggleFood={handleToggleMeal}
 />
 
 
@@ -243,6 +232,11 @@ const totalCalories = Object.values(meals)
 />
 
       </div>
+
+      <section className="mt-8">
+        <h2 className="mb-4 text-2xl font-bold text-slate-800">AI Daily Nutrition Feedback</h2>
+        <AIHealthScore summary={dailySummary} />
+      </section>
 
       {/* Bottom Cards */}
       <div className="grid lg:grid-cols-2 gap-6 mt-6">

@@ -1,8 +1,10 @@
+import { normalizeAiText } from "../common/FormattedText";
+
 const DecisionTrace = ({ trace }) => {
 
     if (!trace) return null;
 
-    const steps = trace.split("\n");
+    const steps = normalizeAiText(trace).split("\n").filter(Boolean);
 
     return (
 
@@ -20,7 +22,7 @@ const DecisionTrace = ({ trace }) => {
                         key={index}
                         className="border-l-4 border-indigo-500 pl-3"
                     >
-                        {step}
+                        <span className="whitespace-pre-line">{step}</span>
                     </li>
 
                 ))}

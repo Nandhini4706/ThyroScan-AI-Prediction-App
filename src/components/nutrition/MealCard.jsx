@@ -57,8 +57,9 @@ export default function MealCard({
   </span>
 
   <button
-  onClick={() => onDeleteFood( mealKey, index)}
+  onClick={() => onDeleteFood(food.id)}
   className="text-red-500 hover:text-red-700"
+  aria-label={`Delete ${food.name}`}
 >
   <RiDeleteBin6Line />
 </button>

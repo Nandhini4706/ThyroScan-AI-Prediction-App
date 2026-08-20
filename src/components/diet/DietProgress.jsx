@@ -26,7 +26,7 @@ export default function DietProgress({
       </div>
 
       <p className="text-gray-500 mt-3">
-        {completed} / {total} foods completed
+        {completed} / {total} recommended meals completed
       </p>
 
     </div>

@@ -1,3 +1,5 @@
+import FormattedText from "../common/FormattedText";
+
 const MealPlan = ({ mealPlan }) => {
 
     if (!mealPlan) return null;
@@ -9,9 +11,9 @@ const MealPlan = ({ mealPlan }) => {
                 📅 7-Day Meal Plan
             </h2>
 
-            <pre className="whitespace-pre-wrap font-sans leading-8 text-gray-700">
-                {mealPlan}
-            </pre>
+            <div className="whitespace-pre-line font-sans leading-8 text-gray-700">
+                <FormattedText value={mealPlan} />
+            </div>
 
         </div>
     );

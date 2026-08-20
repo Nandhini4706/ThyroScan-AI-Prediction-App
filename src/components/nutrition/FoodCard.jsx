@@ -1,3 +1,5 @@
+import FormattedText from "../common/FormattedText";
+
 const FoodCard = ({ title, foods, type }) => {
 
     if (!foods) return null;
@@ -32,7 +34,7 @@ const FoodCard = ({ title, foods, type }) => {
                     >
 
                         <p className="font-medium">
-                            {food}
+                            <FormattedText value={food} />
                         </p>
 
                     </div>

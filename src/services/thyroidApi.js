@@ -69,6 +69,9 @@ chatWithAI: (id, message) =>
 
 getTodayMeals: () => api.get("/diet/today"),
 
+// GET /api/diet-plan/today
+getTodayDietPlan: () => api.get("/diet-plan/today"),
+
 getDietHistory: () => api.get("/diet/history"),
 
 deleteFood: (id) => api.delete(`/diet/${id}`),

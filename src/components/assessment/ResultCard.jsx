@@ -2,6 +2,7 @@ import {
   RiAlertLine, RiCheckboxCircleLine, RiLeafLine,
   RiCloseLine, RiRunLine, RiDropLine, RiPulseLine, RiArrowRightLine
 } from 'react-icons/ri';
+import FormattedText from '../common/FormattedText';
 
 function RiskBadge({ level }) {
   const isHigh = level?.toLowerCase() === 'high';
@@ -26,7 +27,7 @@ function FoodChip({ label, type }) {
       ) : (
         <RiCloseLine className="mr-1.5 text-red-400" />
       )}
-      {label}
+      <FormattedText value={label} />
     </span>
   );
 }
@@ -85,7 +86,7 @@ export default function ResultCard({ result }) {
               </div>
               <span className="text-xs font-semibold text-teal-700 uppercase tracking-wide">Exercise</span>
             </div>
-            <p className="text-sm font-medium text-slate-700 leading-snug">{result.exercise}</p>
+            <p className="text-sm font-medium text-slate-700 leading-snug"><FormattedText value={result.exercise} /></p>
           </div>
           <div className="p-4 rounded-xl bg-sky-50 border border-sky-100">
             <div className="flex items-center gap-2 mb-2">
@@ -94,7 +95,7 @@ export default function ResultCard({ result }) {
               </div>
               <span className="text-xs font-semibold text-sky-700 uppercase tracking-wide">Hydration</span>
             </div>
-            <p className="text-sm font-medium text-slate-700 leading-snug">{result.waterIntake}</p>
+            <p className="text-sm font-medium text-slate-700 leading-snug"><FormattedText value={result.waterIntake} /></p>
           </div>
         </div>
 
