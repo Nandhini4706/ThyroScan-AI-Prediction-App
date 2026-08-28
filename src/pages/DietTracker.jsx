@@ -128,19 +128,16 @@ export default function DietTracker() {
         setLoading(true);
         setError("");
 
-        const [
-          mealData,
-          plan,
-          summary,
-        ] = await Promise.all([
+       const [
+  mealData,
+  plan,
+] = await Promise.all([
 
-          thyroidApi.getTodayMeals(),
+  thyroidApi.getTodayMeals(),
 
-          thyroidApi.getTodayDietPlan(),
+  thyroidApi.getTodayDietPlan(),
 
-          thyroidApi.getDailySummary(),
-
-        ]);
+]);
 
 
         // -----------------------------------------------------
@@ -173,6 +170,29 @@ export default function DietTracker() {
 
         setDietPlan(plan || null);
 
+// -----------------------------------------------------
+// GET COMPLETED RECOMMENDED MEALS
+// -----------------------------------------------------
+
+const completedKey = getTodayStorageKey();
+
+const completed =
+  JSON.parse(
+    localStorage.getItem(completedKey) || "[]"
+  );
+
+setCompletedMeals(completed);
+
+
+// -----------------------------------------------------
+// GET AI SUMMARY
+// Send completed meals to backend
+// -----------------------------------------------------
+
+const summary =
+  await thyroidApi.getDailySummary(completed);
+
+setDailySummary(summary || null);
 
         // -----------------------------------------------------
         // AI SUMMARY
@@ -234,16 +254,21 @@ export default function DietTracker() {
 
     try {
 
-      const [
-        mealData,
-        summary,
-      ] = await Promise.all([
+      const mealData =
+  await thyroidApi.getTodayMeals();
 
-        thyroidApi.getTodayMeals(),
+const completedKey =
+  getTodayStorageKey();
 
-        thyroidApi.getDailySummary(),
+const completed =
+  JSON.parse(
+    localStorage.getItem(completedKey) || "[]"
+  );
 
-      ]);
+const summary =
+  await thyroidApi.getDailySummary(
+    completed
+  );
 
 
       console.log(

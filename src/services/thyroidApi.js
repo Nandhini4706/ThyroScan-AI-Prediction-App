@@ -180,9 +180,12 @@ export const thyroidApi = {
     // -----------------------------------------------------
     // DAILY SUMMARY
     // -----------------------------------------------------
-
-    getDailySummary: () =>
-        api.get("/daily-summary"),
+getDailySummary: (completedMeals = []) =>
+    api.get("/daily-summary", {
+        params: {
+            completedMeals: completedMeals.join(",")
+        }
+    }),
 
 
     // -----------------------------------------------------
