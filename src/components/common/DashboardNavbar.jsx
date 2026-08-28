@@ -36,7 +36,7 @@ export default function Navbar() {
             : 'bg-white/80 backdrop-blur-sm'
         }`}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <NavLink to="/" className="flex items-center gap-2.5 group">
@@ -50,7 +50,7 @@ export default function Navbar() {
             </NavLink>
 
             {/* Desktop nav */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden xl:flex items-center gap-1">
               {navLinks.map(({ to, label, icon: Icon }) => (
                 <NavLink
                   key={to}
@@ -75,7 +75,7 @@ export default function Navbar() {
             </div>
 
             {/* Right side desktop */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden xl:flex items-center gap-3">
   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100">
     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
     <span className="text-xs font-medium text-emerald-700">
@@ -89,7 +89,7 @@ export default function Navbar() {
             {/* Mobile menu toggle */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors duration-200"
+              className="xl:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors duration-200"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <RiCloseLine className="text-xl" /> : <RiMenuLine className="text-xl" />}
@@ -101,14 +101,14 @@ export default function Navbar() {
       {/* Mobile menu overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm xl:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Mobile menu panel */}
       <div
-        className={`fixed top-16 left-0 right-0 z-40 md:hidden transition-all duration-300 ease-in-out ${
+        className={`fixed top-16 left-0 right-0 z-40 xl:hidden transition-all duration-300 ease-in-out ${
           mobileOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
         }`}
       >

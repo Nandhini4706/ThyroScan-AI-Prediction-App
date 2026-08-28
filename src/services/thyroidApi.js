@@ -1,94 +1,206 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = "http://localhost:8080/api";
 
-  const api = axios.create({
-  baseURL: BASE_URL,
-  timeout: 60000,
+const api = axios.create({
+    baseURL: BASE_URL,
+    timeout: 60000,
 });
 
-// Request interceptor
+
+// =========================================================
+// REQUEST INTERCEPTOR
+// =========================================================
+
 api.interceptors.request.use(
-  (config) => {
+    (config) => {
 
-    const token = localStorage.getItem("token");
-    
+        const token = localStorage.getItem("token");
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
 
-    return config;
-  },
-  (error) => Promise.reject(error)
+        return config;
+    },
+
+    (error) => Promise.reject(error)
 );
-// Response interceptor
+
+
+// =========================================================
+// RESPONSE INTERCEPTOR
+// =========================================================
+
 api.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
 
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
+    // IMPORTANT:
+    // Return response.data directly
+    (response) => response.data,
+
+    (error) => {
+
+        if (error.response?.status === 401) {
+
+            localStorage.removeItem("token");
+
+            window.location.href = "/login";
+        }
+
+        const message =
+            error.response?.data?.message ||
+            error.response?.data?.error ||
+            error.message ||
+            "An unexpected error occurred";
+
+        return Promise.reject(
+            new Error(message)
+        );
     }
-
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
-      error.message ||
-      "An unexpected error occurred";
-
-    return Promise.reject(new Error(message));
-  }
 );
+
+
+// =========================================================
+// THYROID API
+// =========================================================
 
 export const thyroidApi = {
-  // POST /api/thyroid/predict
-  predict: (data) => api.post('/thyroid/predict', data),
 
-  // GET /api/thyroid/history
-  getHistory: () => api.get('/thyroid/history'),
+    // -----------------------------------------------------
+    // Thyroid prediction
+    // -----------------------------------------------------
 
- // GET /api/thyroid/report-history/:id
-getById: (id) => api.get(`/thyroid/history/${id}`),
+    predict: (data) =>
+        api.post("/thyroid/predict", data),
 
-// DELETE /api/thyroid/report-history/:id
-deleteById: (id) => api.delete(`/thyroid/history/${id}`),
 
-// GET /api/thyroid/report-ai/:id
-getAIAdvice: (id) => api.get(`/thyroid/ai-chat/${id}`),
+    // -----------------------------------------------------
+    // Thyroid history
+    // -----------------------------------------------------
 
-getDashboard: () => api.get("/dashboard"),
-getFullHistory: () => api.get("/history"),
-// POST /api/thyroid/ai-chat/:id
-chatWithAI: (id, message) =>
-  api.post(`/thyroid/ai-chat/${id}`, {
-    message,
-  }),
-  addFood: (food) => api.post("/diet", food),
+    getHistory: () =>
+        api.get("/thyroid/history"),
 
-getTodayMeals: () => api.get("/diet/today"),
 
-// GET /api/diet-plan/today
-getTodayDietPlan: () => api.get("/diet-plan/today"),
+    // -----------------------------------------------------
+    // Get report by ID
+    // -----------------------------------------------------
 
-getDietHistory: () => api.get("/diet/history"),
+    getById: (id) =>
+        api.get(`/thyroid/history/${id}`),
 
-deleteFood: (id) => api.delete(`/diet/${id}`),
-getDailySummary: () => api.get("/daily-summary"),
-  
-  // POST /api/thyroid/report-analysis (multipart/form-data file upload)
-  analyzeReport: async (file) => {
 
-    const formData = new FormData();
-    
-    formData.append("file", file);
+    // -----------------------------------------------------
+    // Delete report
+    // -----------------------------------------------------
 
-    return await api.post(
-        "/thyroid/report-analysis",
-        formData
-    );
+    deleteById: (id) =>
+        api.delete(`/thyroid/history/${id}`),
 
-},
+
+    // -----------------------------------------------------
+    // AI advice
+    // -----------------------------------------------------
+
+    getAIAdvice: (id) =>
+        api.get(`/thyroid/ai-chat/${id}`),
+
+
+    // -----------------------------------------------------
+    // Dashboard
+    // -----------------------------------------------------
+
+    getDashboard: () =>
+        api.get("/dashboard"),
+
+
+    // -----------------------------------------------------
+    // REPORT HISTORY
+    // Backend:
+    // GET /api/history/report-history
+    // -----------------------------------------------------
+
+    getFullHistory: () =>
+        api.get("/history/report-history"),
+
+
+    // -----------------------------------------------------
+    // AI Chat
+    // -----------------------------------------------------
+
+    chatWithAI: (id, message) =>
+        api.post(
+            `/thyroid/ai-chat/${id}`,
+            {
+                message: message,
+            }
+        ),
+
+
+    // -----------------------------------------------------
+    // ADD FOOD
+    // -----------------------------------------------------
+
+    addFood: (food) =>
+        api.post("/diet", food),
+
+
+    // -----------------------------------------------------
+    // TODAY'S MEALS
+    // -----------------------------------------------------
+
+    getTodayMeals: () =>
+        api.get("/diet/today"),
+
+
+    // -----------------------------------------------------
+    // TODAY'S DIET PLAN
+    // -----------------------------------------------------
+
+    getTodayDietPlan: () =>
+        api.get("/diet-plan/today"),
+
+
+    // -----------------------------------------------------
+    // DIET HISTORY
+    // -----------------------------------------------------
+
+    getDietHistory: () =>
+        api.get("/diet/history"),
+
+
+    // -----------------------------------------------------
+    // DELETE FOOD
+    // -----------------------------------------------------
+
+    deleteFood: (id) =>
+        api.delete(`/diet/${id}`),
+
+
+    // -----------------------------------------------------
+    // DAILY SUMMARY
+    // -----------------------------------------------------
+
+    getDailySummary: () =>
+        api.get("/daily-summary"),
+
+
+    // -----------------------------------------------------
+    // REPORT ANALYSIS
+    // -----------------------------------------------------
+
+    analyzeReport: async (file) => {
+
+        const formData = new FormData();
+
+        formData.append("file", file);
+
+        return await api.post(
+            "/thyroid/report-analysis",
+            formData
+        );
+    },
 };
+
+
 export default thyroidApi;

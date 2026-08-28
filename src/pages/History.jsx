@@ -3,110 +3,114 @@ import { thyroidApi } from "../services/thyroidApi";
 
 export default function History() {
 
-    const [history, setHistory] = useState(null);
+    const [history, setHistory] = useState([]);
 
-    useEffect(() => {
+  useEffect(() => {
 
-        const loadHistory = async () => {
+    const loadHistory = async () => {
 
-            try {
+        try {
 
-                const data = await thyroidApi.getFullHistory();
+            const data =
+    await thyroidApi.getFullHistory();
 
-                setHistory(data);
+console.log("HISTORY DATA:", data);
 
-            } catch (err) {
+setHistory(
+    Array.isArray(data)
+        ? data
+        : []
+);
 
-                console.error(err);
+        } catch (err) {
 
-            }
+            console.error(err);
 
-        };
+        }
 
-        loadHistory();
+    };
 
-    }, []);
+    loadHistory();
+
+}, []);
 
     return (
+
         <div className="max-w-7xl mx-auto px-6 py-8">
 
             <h1 className="text-3xl font-bold mb-8">
                 History
             </h1>
 
-            {/* Reports */}
+
+            {/* =========================
+                REPORT HISTORY
+            ========================= */}
 
             <div className="bg-white rounded-2xl shadow border p-6 mb-8">
 
                 <h2 className="text-xl font-bold mb-4">
                     Report History
                 </h2>
-{history?.reports?.length === 0 ? (
 
-    <p className="text-slate-500">
-        No reports found.
-    </p>
+                {history.length === 0 ?  (
+                    <p className="text-slate-500">
+                        No reports found.
+                    </p>
 
-) : (
+                ) : (
 
-    history?.reports?.map(report => (
+                    history.map((report) => (
 
-        <div
-            key={report.id}
-            className="border-b py-3"
-        >
+                        <div
+                            key={report.id}
+                            className="border-b py-4"
+                        >
 
-            <p>{report.name}</p>
+                            <p>
+                                <strong>Patient:</strong>{" "}
+                                {report.patient}
+                            </p>
 
-            <p>{report.prediction}</p>
+                            <p>
+                                <strong>Diagnosis:</strong>{" "}
+                                {report.diagnosis}
+                            </p>
 
-            <p>{report.riskLevel}</p>
+                            <p>
+                                <strong>Risk:</strong>{" "}
+                                {report.risk}
+                            </p>
 
-        </div>
+                            <p>
+                                <strong>TSH:</strong>{" "}
+                                {report.tSH}
+                            </p>
 
-    ))
+                            <p>
+                                <strong>T3:</strong>{" "}
+                                {report.t3}
+                            </p>
 
-)}
+                            <p>
+                                <strong>T4:</strong>{" "}
+                                {report.t4}
+                            </p>
 
-            </div>
+                            <p>
+                                <strong>Date:</strong>{" "}
+                                {report.reportDate}
+                            </p>
 
-            {/* Diet */}
+                        </div>
 
-            <div className="bg-white rounded-2xl shadow border p-6">
+                    ))
 
-                <h2 className="text-xl font-bold mb-4">
-                    Diet History
-                </h2>
-
-                {history?.diets?.length === 0 ? (
-
-    <p className="text-slate-500">
-        No diet history found.
-    </p>
-
-) : (
-
-    history?.diets?.map(diet => (
-
-        <div
-            key={diet.id}
-            className="border-b py-3"
-        >
-
-            <p>{diet.foodName}</p>
-
-            <p>{diet.calories} kcal</p>
-
-            <p>{diet.date}</p>
-
-        </div>
-
-    ))
-
-)}
+                )}
 
             </div>
 
         </div>
+
     );
 }
